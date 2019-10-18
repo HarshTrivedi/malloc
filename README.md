@@ -8,7 +8,7 @@ malloc-lab
 
 ### DESCRIPTION 
 
-The solution adopted is of using an explicit free list to maintain the list of pointers to free blocks. This enhances speed wise performace of allocator as compared to implicit free list, since allocator does not need to traverse the allocated blocks while finding appropiate size of free memory. This improved throughput to great extent. To improve memory allocation (util) , some changes have been made in reallocation strategy. Finally to improve performance a little more, some changes have been made in find fit function so as to prevent very long traversals sometimes.
+The solution adopted is of using an explicit free list to maintain the list of pointers to free blocks. This enhances performace of allocator, compared to the use of an implicit free list, since allocator does not need to traverse the allocated blocks to find appropiate size of free memory. This improves throughput to great extent. To improve memory allocation (util) , some changes have been made in reallocation strategy. Finally to improve performance a little more, some changes have been made in find fit function so as to prevent very long traversals sometimes.
 
 ### DESIGN 
 
@@ -17,7 +17,7 @@ In all there are 3 main features that has been added to allocator (changed from 
 * Implemented explicit free list to maintain the list of pointers to free blocks. 
 
 * DataStructure used of free list is Doubly Linked List.
-* Programmer accesses only that memory which is allocated. Ie (the allocated blocks) So free blocks can be effieciently to store other important information. Since minimum block size given is 4 words , no free block can be less than 4 words. With this fact, we can easiliy store 2 pointers in free blocks (which requires only 2 words). First pointer will point to the free block (in heap) previous to the current free block (in which I am storing pointers) and the second will point to the free block next to the current free block.
+* Programmer accesses only that memory which is allocated (that is, the allocated blocks). So free blocks can be used efficiently to store other important information, considering how much of an expensive resource memory is. Since the minimum block size given is 4 words , no free block can be less than 4 words. With this fact, we can easiliy store 2 pointers in free blocks (which requires only 2 words). First pointer will point to the free block (in heap) previous to the current free block (in which I am storing pointers) and the second will point to the free block next to the current free block.
 
 #### 1.
 Any free block in heap will be of following format.
@@ -28,7 +28,7 @@ Any free block in heap will be of following format.
 --------------------------------------------------------------------------
 ```
 
-Hence if I have a pointer bp to a free block then i can access next and previous free blocks using macros:
+Hence if we have a pointer bp to a free block then we can access next and previous free blocks using macros:
 
 ```
 	#define GET_NEXT_PTR(bp)  (*(char **)(bp + WSIZE))
@@ -75,9 +75,9 @@ Just combine two blocks while taking care of extra space remaining:
 
 Preventing dropping performance due to repetitive same sized malloc calls.
 
-I have a test file called binary-bal.rep in which same malloc requests are made many many of times in a row. Implementing first fit algorithm using explicit list reduces time- efficiency. To prevent from this condition, we can use the following scheme:
+I have a test file called binary-bal.rep in which same malloc requests are made many many of times in a row. Implementing first fit algorithm using explicit list reduces time- efficiency. To prevent this situation, we can use the following scheme:
 
-If it is realized that many times (say > 30 times) same malloc size request has been made then instead of traversing the full free list , when I know it is going to take long, I can just extend the heap by the requested amount. However care has to be taken so as to prevent many extend_heap calls to make program run out of memory.
+If it is realized that many times (say > 30 times) same malloc size request has been made, then instead of traversing the full free list , when I know it is going to take long, I can just extend the heap by the requested amount. However care has to be taken so as to prevent many extend_heap calls to make program run out of memory.
 
 ##### Extra points about the program:
 
